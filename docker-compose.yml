@@ -1,0 +1,72 @@
+version: '3.8'
+
+services:
+  # MySQL 数据库服务
+  mysql:
+    image: mysql:8.0
+    container_name: sky-mysql
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root123456
+      MYSQL_DATABASE: sky_take_out
+      TZ: Asia/Shanghai
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./docs/sql:/docker-entrypoint-initdb.d
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --default-authentication-plugin=mysql_native_password
+    networks:
+      - sky-network
+
+  # Redis 缓存服务
+  redis:
+    image: redis:7.0-alpine
+    container_name: sky-redis
+    restart: always
+    ports:
+      - "6379:6379"
+    command: redis-server --requirepass 123456
+    volumes:
+      - redis_data:/data
+    networks:
+      - sky-network
+
+  # 后端服务
+  backend:
+    build:
+      context: ./backend
+      dockerfile: ../Dockerfile
+    container_name: sky-backend
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - SKY_DATASOURCE_HOST=mysql
+      - SKY_DATASOURCE_PORT=3306
+      - SKY_DATASOURCE_DATABASE=sky_take_out
+      - SKY_DATASOURCE_USERNAME=root
+      - SKY_DATASOURCE_PASSWORD=root123456
+      - SKY_REDIS_HOST=redis
+      - SKY_REDIS_PORT=6379
+      - SKY_REDIS_PASSWORD=123456
+      - SKY_REDIS_DATABASE=10
+    depends_on:
+      - mysql
+      - redis
+    networks:
+      - sky-network
+
+volumes:
+  mysql_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  sky-network:
+    driver: bridge

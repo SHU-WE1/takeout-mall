@@ -1,0 +1,1 @@
+<view class="{{['popup-content',(type==='left'||type==='right')?'popup-height':'']}}"><text class="text">キャンセルには店舗にお問い合わせください！</text></view>
