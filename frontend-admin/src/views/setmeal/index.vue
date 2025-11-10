@@ -168,10 +168,10 @@ export default {
         cancelButtonText: 'キャンセル',
         type: 'warning'
       }).then(() => {
-        let params: any = ''
+        let params: string | number = ''
         if (type === 'S') {
           //単一削除
-          params = String(id)
+          params = id
         } else {
           const arr = new Array
           this.multipleSelection.forEach(element => {

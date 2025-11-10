@@ -11,7 +11,8 @@
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "baseUrl": ".",
-    "skipLibCheck":true,
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
     "types": [
       "node",
       "jest",

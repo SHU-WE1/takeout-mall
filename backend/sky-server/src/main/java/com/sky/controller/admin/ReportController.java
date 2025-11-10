@@ -20,7 +20,7 @@ import java.time.LocalDate;
 @RestController
 @RequestMapping("/admin/report")
 @Slf4j
-@Api(tags = "统计报表相关接口")
+@Api(tags = "統計レポートAPI")
 public class ReportController {
 
     @Autowired
@@ -33,7 +33,7 @@ public class ReportController {
      * @return
      */
     @GetMapping("/turnoverStatistics")
-    @ApiOperation("营业额数据统计")
+    @ApiOperation("売上データ統計")
     public Result<TurnoverReportVO> turnoverStatistics(
             @DateTimeFormat(pattern = "yyyy-MM-dd")
             LocalDate begin,
@@ -49,7 +49,7 @@ public class ReportController {
      * @return
      */
     @GetMapping("/userStatistics")
-    @ApiOperation("用户数据统计")
+    @ApiOperation("ユーザーデータ統計")
     public Result<UserReportVO> userStatistics(
             @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate begin,
             @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end){
@@ -64,7 +64,7 @@ public class ReportController {
      * @return
      */
     @GetMapping("/ordersStatistics")
-    @ApiOperation("用户数据统计")
+    @ApiOperation("注文データ統計")
     public Result<OrderReportVO> orderStatistics(
             @DateTimeFormat(pattern = "yyyy-MM-dd")
             LocalDate begin,
@@ -81,7 +81,7 @@ public class ReportController {
      * @return
      */
     @GetMapping("/top10")
-    @ApiOperation("销量排名统计")
+    @ApiOperation("販売数量ランキング統計")
     public Result<SalesTop10ReportVO> top10(
             @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate begin,
             @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end){

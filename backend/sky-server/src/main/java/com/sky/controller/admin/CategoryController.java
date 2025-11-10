@@ -29,7 +29,7 @@ public class CategoryController {
      * @return
      */
     @PostMapping
-    @ApiOperation("新增分类")
+    @ApiOperation("カテゴリを登録")
     public Result <String> save(@RequestBody CategoryDTO categoryDTO) {
         log.info("新增分类：{}", categoryDTO);
         categoryService.save(categoryDTO);
@@ -43,7 +43,7 @@ public class CategoryController {
      * @return
      */
     @GetMapping("/page")
-    @ApiOperation("分页查询")
+    @ApiOperation("一覧取得（ページネーション）")
     public Result<PageResult> page(CategoryPageQueryDTO categoryPageQueryDTO){
         log.info("分页查询:{}", categoryPageQueryDTO);
         PageResult pageResult = categoryService.pageQuery(categoryPageQueryDTO);
@@ -57,7 +57,7 @@ public class CategoryController {
      * @return
      */
     @DeleteMapping
-    @ApiOperation(("删除分类"))
+    @ApiOperation("カテゴリを削除")
     public Result delete(@RequestParam Integer id){
         log.info("删除分类的id:{}", id);
         categoryService.delete(id);
@@ -70,7 +70,7 @@ public class CategoryController {
      * @return
      */
     @PutMapping
-    @ApiOperation("编辑分类信息")
+    @ApiOperation("カテゴリ情報を更新")
     public Result update(@RequestBody CategoryDTO categoryDTO){
         log.info("编辑分类信息:{}", categoryDTO);
         categoryService.update(categoryDTO);
@@ -84,7 +84,7 @@ public class CategoryController {
      * @return
      */
     @PostMapping("/status/{status}")
-    @ApiOperation("启用禁用分类")
+    @ApiOperation("カテゴリの有効化/無効化")
     public Result startOrStop(@PathVariable Integer status,Long id){
         log.info("启用禁用员工:{}", status,id);
         categoryService.startOrStop(status,id);
@@ -98,7 +98,7 @@ public class CategoryController {
      * @return
      */
     @GetMapping("/list")
-    @ApiOperation("根据类型查询分类")
+    @ApiOperation("タイプによるカテゴリ取得")
     public Result<List<Category>> list(Integer type){
         List<Category> list = categoryService.list(type);
         return Result.success(list);

@@ -6,8 +6,9 @@ services:
     image: mysql:8.0
     container_name: sky-mysql
     restart: always
-    ports:
-      - "3307:3306"  # 使用3307端口避免与本地mysql冲突
+    # 生产环境：不暴露端口到外部，仅内部访问
+    # ports:
+    #   - "3306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
@@ -27,8 +28,9 @@ services:
     image: redis:7.0-alpine
     container_name: sky-redis
     restart: always
-    ports:
-      - "6380:6379"  # 使用6380端口避免与本地redis冲突
+    # 生产环境：不暴露端口到外部，仅内部访问
+    # ports:
+    #   - "6379:6379"
     command: redis-server --requirepass ${REDIS_PASSWORD}
     volumes:
       - redis_data:/data
@@ -84,7 +86,7 @@ services:
     container_name: sky-frontend
     restart: always
     ports:
-      - "8081:80"  # 使用8081端口避免与本地80端口冲突
+      - "80:80"  # 生产环境使用标准HTTP端口
     depends_on:
       - backend
     networks:
@@ -99,3 +101,4 @@ volumes:
 networks:
   sky-network:
     driver: bridge
+

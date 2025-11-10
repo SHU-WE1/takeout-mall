@@ -19,7 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/user/shoppingCart")
 @Slf4j
-@Api(tags = "C端-购物车接口")
+@Api(tags = "ユーザー側-ショッピングカートAPI")
 public class ShoppingCartController {
 
     @Autowired
@@ -31,7 +31,7 @@ public class ShoppingCartController {
      * @return
      */
     @PostMapping("/add")
-    @ApiOperation("添加购物车")
+    @ApiOperation("ショッピングカートに追加")
     public Result add(@RequestBody ShoppingCartDTO shoppingCartDTO){
         log.info("添加购物车：{}", shoppingCartDTO);
         log.info("当前用户ID: {}", BaseContext.getCurrentId());
@@ -43,7 +43,7 @@ public class ShoppingCartController {
      * @return
      */
     @GetMapping("/list")
-    @ApiOperation("查看购物车")
+    @ApiOperation("ショッピングカート一覧取得")
     public Result<List<ShoppingCart>> list(){
         return Result.success(shoppingCartService.showShoppingCart());
     }
@@ -53,7 +53,7 @@ public class ShoppingCartController {
      * @return
      */
     @DeleteMapping("/clean")
-    @ApiOperation("清空购物车商品")
+    @ApiOperation("ショッピングカートを空にする")
     public Result clean(){
         shoppingCartService.clean(BaseContext.getCurrentId());
         return Result.success();

@@ -20,7 +20,7 @@ import java.util.UUID;
  */
 @RestController
 @RequestMapping("/admin/common")
-@Api(tags = "通用接口")
+@Api(tags = "共通API")
 @Slf4j
 public class CommonController {
 
@@ -32,7 +32,7 @@ public class CommonController {
      * @return
      */
     @PostMapping("/upload")
-    @ApiOperation("文件上传")
+    @ApiOperation("ファイルアップロード")
     public Result<String> upload(MultipartFile file) {
         log.info("文件上传");
 

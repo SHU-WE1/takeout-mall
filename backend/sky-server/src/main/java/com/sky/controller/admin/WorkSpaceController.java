@@ -23,7 +23,7 @@ import java.time.LocalTime;
 @RestController
 @RequestMapping("/admin/workspace")
 @Slf4j
-@Api(tags = "工作台相关接口")
+@Api(tags = "ダッシュボードAPI")
 public class WorkSpaceController {
 
     @Autowired
@@ -34,7 +34,7 @@ public class WorkSpaceController {
      * @return
      */
     @GetMapping("/businessData")
-    @ApiOperation("工作台今日数据查询")
+    @ApiOperation("ダッシュボード本日データ取得")
     public Result<BusinessDataVO> businessData(){
         //获得当天的开始时间
         LocalDateTime begin = LocalDateTime.now().with(LocalTime.MIN);
@@ -50,7 +50,7 @@ public class WorkSpaceController {
      * @return
      */
     @GetMapping("/overviewOrders")
-    @ApiOperation("查询订单管理数据")
+    @ApiOperation("注文管理データ取得")
     public Result<OrderOverViewVO> orderOverView(){
         return Result.success(workspaceService.getOrderOverView());
     }
@@ -60,7 +60,7 @@ public class WorkSpaceController {
      * @return
      */
     @GetMapping("/overviewDishes")
-    @ApiOperation("查询菜品总览")
+    @ApiOperation("料理サマリー取得")
     public Result<DishOverViewVO> dishOverView(){
         return Result.success(workspaceService.getDishOverView());
     }
@@ -70,7 +70,7 @@ public class WorkSpaceController {
      * @return
      */
     @GetMapping("/overviewSetmeals")
-    @ApiOperation("查询套餐总览")
+    @ApiOperation("セットメニューサマリー取得")
     public Result<SetmealOverViewVO> setmealOverView(){
         return Result.success(workspaceService.getSetmealOverView());
     }

@@ -24,7 +24,7 @@
 <script lang="ts">
 import pathToRegexp from 'path-to-regexp'
 import { Component, Vue, Watch } from 'vue-property-decorator'
-import { RouteRecordRaw as RouteRecord, Route } from 'vue-router'
+import { RouteRecord, Route } from 'vue-router'
 
 @Component({
   'name': 'Breadcrumb'

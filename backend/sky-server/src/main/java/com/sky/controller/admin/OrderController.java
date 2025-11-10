@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController("adminOrderController")
 @RequestMapping("/admin/order")
 @Slf4j
-@Api(tags = "订单管理接口")
+@Api(tags = "注文管理API")
 public class OrderController {
 
     @Autowired
@@ -34,7 +34,7 @@ public class OrderController {
      * @return
      */
     @GetMapping("/conditionSearch")
-    @ApiOperation("订单搜索")
+    @ApiOperation("注文検索")
     public Result<PageResult> conditionSearch(OrdersPageQueryDTO ordersPageQueryDTO) {
         PageResult pageResult = orderService.conditionSearch(ordersPageQueryDTO);
         return Result.success(pageResult);
@@ -46,7 +46,7 @@ public class OrderController {
      * @return
      */
     @GetMapping("/statistics")
-    @ApiOperation("各个状态的订单数量统计")
+    @ApiOperation("注文ステータス別件数統計")
     public Result<OrderStatisticsVO> statistics() {
         OrderStatisticsVO orderStatisticsVO = orderService.statistics();
         return Result.success(orderStatisticsVO);
@@ -59,7 +59,7 @@ public class OrderController {
      * @return
      */
     @GetMapping("/details/{id}")
-    @ApiOperation("查询订单详情")
+    @ApiOperation("注文詳細情報取得")
     public Result<OrderVO> details(@PathVariable("id") Long id) {
         OrderVO orderVO = orderService.details(id);
         return Result.success(orderVO);
@@ -71,7 +71,7 @@ public class OrderController {
      * @return
      */
     @PutMapping("/confirm")
-    @ApiOperation("接单")
+    @ApiOperation("注文を受注")
     public Result confirm(@RequestBody OrdersConfirmDTO ordersConfirmDTO) {
         orderService.confirm(ordersConfirmDTO);
         return Result.success();
@@ -83,7 +83,7 @@ public class OrderController {
      * @return
      */
     @PutMapping("/rejection")
-    @ApiOperation("拒单")
+    @ApiOperation("注文を拒否")
     public Result rejection(@RequestBody OrdersRejectionDTO ordersRejectionDTO) throws Exception {
         orderService.rejection(ordersRejectionDTO);
         return Result.success();
@@ -95,7 +95,7 @@ public class OrderController {
      * @return
      */
     @PutMapping("/cancel")
-    @ApiOperation("取消订单")
+    @ApiOperation("注文をキャンセル")
     public Result cancel(@RequestBody OrdersCancelDTO ordersCancelDTO) throws Exception {
         orderService.cancel(ordersCancelDTO);
         return Result.success();
@@ -107,7 +107,7 @@ public class OrderController {
      * @return
      */
     @PutMapping("/delivery/{id}")
-    @ApiOperation("派送订单")
+    @ApiOperation("注文を配達開始")
     public Result delivery(@PathVariable("id") Long id) {
         orderService.delivery(id);
         return Result.success();
@@ -119,7 +119,7 @@ public class OrderController {
      * @return
      */
     @PutMapping("/complete/{id}")
-    @ApiOperation("完成订单")
+    @ApiOperation("注文を完了")
     public Result complete(@PathVariable("id") Long id) {
         orderService.complete(id);
         return Result.success();

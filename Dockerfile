@@ -1,5 +1,5 @@
-# 使用Maven官方镜像作为构建阶段
-FROM maven:3.8.6-openjdk-11-slim AS build
+# 使用Maven官方镜像作为构建阶段（JDK 17 - Spring Boot 2.7.3 官方支持）
+FROM maven:3.9-eclipse-temurin-17 AS build
 
 # 设置工作目录
 WORKDIR /app
@@ -21,8 +21,8 @@ COPY sky-server/src ./sky-server/src
 # 构建应用
 RUN mvn clean package -DskipTests
 
-# 运行时阶段
-FROM openjdk:11-jre-slim
+# 运行时阶段（JDK 17）
+FROM eclipse-temurin:17-jre
 
 # 设置工作目录
 WORKDIR /app
@@ -35,7 +35,8 @@ EXPOSE 8080
 
 # 设置时区
 ENV TZ=Asia/Shanghai
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
+    echo $TZ > /etc/timezone
 
 # 启动应用
 ENTRYPOINT ["java", "-jar", "app.jar"]

@@ -22,7 +22,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/admin/setmeal")
-@Api(tags = "套餐相关接口")
+@Api(tags = "セットメニュー管理API")
 @Slf4j
 public class SetmealController {
 
@@ -39,7 +39,7 @@ public class SetmealController {
      * @return
      */
     @PostMapping
-    @ApiOperation("新增套餐")
+    @ApiOperation("セットメニューを登録")
     @CacheEvict(cacheNames = "setmealCache",key = "#setmealDTO.categoryId")//key: setmealCache::100
     public Result save(@RequestBody SetmealDTO setmealDTO) {
         setmealService.save(setmealDTO);
@@ -52,7 +52,7 @@ public class SetmealController {
      * @return
      */
     @GetMapping("/page")
-    @ApiOperation("套餐分页查询")
+    @ApiOperation("セットメニュー一覧取得（ページネーション）")
     public Result<PageResult> page(SetmealPageQueryDTO setmealPageQueryDTO){
         log.info("菜品分页查询{}", setmealPageQueryDTO);
         PageResult pageResult = setmealService.pageQuery(setmealPageQueryDTO);
@@ -65,7 +65,7 @@ public class SetmealController {
      * @return
      */
     @DeleteMapping
-    @ApiOperation("批量删除套餐")
+    @ApiOperation("セットメニュー一括削除")
     @CacheEvict(cacheNames = "setmealCache",allEntries = true)
     public Result delete(@RequestParam List<Long> ids){
         setmealService.delete(ids);
@@ -79,7 +79,7 @@ public class SetmealController {
      * @return
      */
     @GetMapping("/{id}")
-    @ApiOperation("根据id查询套餐")
+    @ApiOperation("IDによるセットメニュー情報取得")
     public Result<SetmealVO> getById(@PathVariable Long id){
         log.info("根据id查询套餐:{}",id);
         SetmealVO setmealVO = setmealService.getByIdWithDish(id);
@@ -92,7 +92,7 @@ public class SetmealController {
      * @return
      */
     @PutMapping
-    @ApiOperation("修改套餐")
+    @ApiOperation("セットメニュー情報を更新")
     @CacheEvict(cacheNames = "setmealCache",allEntries = true)
     public Result update(@RequestBody SetmealDTO setmealDTO){
         log.info("修改套餐：{}", setmealDTO);
@@ -101,7 +101,7 @@ public class SetmealController {
     }
 
     @PostMapping("/status/{status}")
-    @ApiOperation("套餐起售停售")
+    @ApiOperation("セットメニューの販売開始/停止")
     @CacheEvict(cacheNames = "setmealCache",allEntries = true)
     public Result<String> startOrStop(@PathVariable Integer status,Long id) {
         setmealService.startOrStop(status, id);

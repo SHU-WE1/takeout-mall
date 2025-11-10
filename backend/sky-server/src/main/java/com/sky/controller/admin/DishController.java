@@ -20,7 +20,7 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("/admin/dish")
-@Api(tags = "菜品相关接口")
+@Api(tags = "料理管理API")
 @Slf4j
 public class DishController {
 
@@ -33,7 +33,7 @@ public class DishController {
      * @return
      */
     @PostMapping
-    @ApiOperation("新增菜品")
+    @ApiOperation("料理を登録")
     public Result save(@RequestBody DishDTO dishDTO){
         log.info("新增菜品：{}", dishDTO);
         dishService.saveWithFlavor(dishDTO);
@@ -51,7 +51,7 @@ public class DishController {
      * @return
      */
     @GetMapping("/page")
-    @ApiOperation("菜品分页查询")
+    @ApiOperation("料理一覧取得（ページネーション）")
     public Result<PageResult> page(DishPageQueryDTO dishPageQueryDTO){
         log.info("菜品分页查询{}", dishPageQueryDTO);
         PageResult pageResult = dishService.pageQuery(dishPageQueryDTO);
@@ -64,7 +64,7 @@ public class DishController {
      * @return
      */
     @DeleteMapping
-    @ApiOperation("菜品批量删除")
+    @ApiOperation("料理一括削除")
     public Result delete(@RequestParam List<Long> ids){
         log.info("菜品批量删除：{}",ids);
         dishService.deletBatch(ids);
@@ -80,7 +80,7 @@ public class DishController {
      * @return
      */
     @GetMapping("/{id}")
-    @ApiOperation("根据id查询菜品信息")
+    @ApiOperation("IDによる料理情報取得")
     public Result<DishVO> getById(@PathVariable Long id){
         log.info("根据id查询菜品:{}",id);
         DishVO dishVO = dishService.getByIdWithFlavor(id);
@@ -93,7 +93,7 @@ public class DishController {
      * @return
      */
     @PutMapping
-    @ApiOperation("修改菜品")
+    @ApiOperation("料理情報を更新")
     public Result update(@RequestBody DishDTO dishDTO){
         log.info("修改菜品：{}", dishDTO);
         dishService.update(dishDTO);
@@ -104,7 +104,7 @@ public class DishController {
     }
 
     @PostMapping("/status/{status}")
-    @ApiOperation("菜品起售停售")
+    @ApiOperation("料理の販売開始/停止")
     public Result<String> startOrStop(@PathVariable Integer status,Long id){
         dishService.startOrStop(status, id);
 

@@ -1,12 +1,68 @@
-# テイクアウト・マルシェ管理システム
+# Takeout Mall 管理システム
 
-Spring Boot + Vue 3 + WeChat MiniProgramをベースにしたフルスタックのテイクアウト配送管理システムです。
+Spring Boot + Vue 2 + WeChat MiniProgramをベースにしたフルスタックのテイクアウト配送管理システムです。
 
-## プロジェクト概要
+## 🚀 オンラインデモ
 
-テイクアウト・マルシェ管理システムは、完全なテイクアウト配送ソリューションで、管理バックエンド、WeChat MiniProgramクライアント、および包括的なデータ管理システムを含みます。システムは料理管理、注文処理、スタッフ管理、データ統計などのコア機能をサポートしています。
+**本システムの管理バックエンドとAPIは実際にデプロイされており、以下のリンクからアクセスできます：**
 
-## 技術スタック
+- **フロントエンド管理画面**: http://167.179.78.66
+- **API ドキュメント**: http://167.179.78.66:8080/doc.html
+
+### デモアカウント
+
+**管理バックエンド:**
+- ユーザー名: `admin`
+- パスワード: `123456`
+
+### デプロイに関する注意事項
+
+**現在デプロイされているもの:**
+- ✅ 管理バックエンド（Vue.js + Nginx）
+- ✅ バックエンドAPI（Spring Boot）
+- ✅ データベース（MySQL + Redis）
+
+**デプロイされていないもの:**
+- ⚠️ WeChat MiniProgram（ローカル開発用のみ）
+  - 理由: WeChat MiniProgramの公開には、WeChat公式アカウントの認証と審査が必要で、個人開発者にとって手続きが複雑なため、デプロイしていません
+  - ローカル開発: `miniprogram/` ディレクトリ内のコードをWeChat開発者ツールで開くことで、ローカルでテストできます
+
+※ デモ環境のため、データは定期的にリセットされる可能性があります。
+
+## 📋 プロジェクト概要
+
+Takeout Mallは、完全なテイクアウト配送ソリューションで、管理バックエンド、WeChat MiniProgramクライアント（ローカル開発用）、および包括的なデータ管理システムを含みます。本システムは、料理管理、注文処理、スタッフ管理、データ統計などのコア機能をサポートしています。
+
+**本プロジェクトは Docker を使用してコンテナ化されており、開発環境と本番環境の両方で Docker Compose を使用してデプロイできます。**
+
+### 主要機能
+
+**管理バックエンド:**
+- ✅ スタッフログイン認証
+- ✅ カテゴリ管理
+- ✅ 料理管理
+- ✅ セットメニュー管理
+- ✅ 注文管理
+- ✅ データ統計
+- ✅ ダッシュボード
+
+**WeChat MiniProgram（ローカル開発用）:**
+- ✅ ユーザーログイン（WeChat認証）
+- ✅ 料理・セットメニュー閲覧
+- ✅ ショッピングカート
+- ✅ 注文発注
+- ✅ 注文履歴
+- ✅ WeChat Pay統合（開発環境）
+- ✅ 住所管理
+
+**バックエンドAPI:**
+- ✅ RESTful API
+- ✅ JWT認証
+- ✅ リアルタイム注文ステータス更新
+- ✅ WeChat Pay統合
+- ✅ Alibaba Cloud OSS統合
+
+## 🛠️ 技術スタック
 
 ### バックエンド
 - **フレームワーク**: Spring Boot 2.7.3
@@ -16,424 +72,231 @@ Spring Boot + Vue 3 + WeChat MiniProgramをベースにしたフルスタック�
 - **認証**: JWT
 - **オブジェクトストレージ**: Alibaba Cloud OSS
 - **決済**: WeChat Pay
+- **Java**: JDK 17
 
 ### フロントエンド
-- **管理バックエンド**: Vue 2 + TypeScript + Element UI
-- **WeChat MiniProgram**: uni-app
-
-## プロジェクト構造
-
-```
-takeout mall/
-├── backend/              # バックエンドサービス
-│   ├── sky-common/      # 共通モジュール
-│   ├── sky-pojo/        # エンティティクラス
-│   └── sky-server/      # アプリケーションサービス
-├── frontend-admin/       # 管理バックエンド
-├── miniprogram/          # WeChat MiniProgram
-├── docker-compose.yml    # Docker編成設定
-├── Dockerfile            # バックエンドイメージビルド
-└── README.md             # プロジェクト説明
-```
-
-## クイックスタート（プロジェクトをクローン後）
-
-### 重要事項
-
-⚠️ **現在のDocker設定にはデータベースとバックエンドサービスのみが含まれており、フロントエンドはローカルで個別に実行する必要があります**
-
-Dockerに含まれるサービス：
-- ✅ MySQL 8.0 データベース
-- ✅ Redis 7.0 キャッシュ
-- ✅ Spring Boot バックエンドサービス
-
-フロントエンドはローカル実行が必要：
-- ⚠️ Vue管理バックエンド（ローカルで `npm run serve` を実行する必要があります）
-
-### 方式1: ハイブリッドモード（推奨、最も簡単）
-
-このモードでは、Dockerでデータベースとバックエンドを起動し、フロントエンドをローカル開発モードで実行します。
-
-#### 1. プロジェクトをクローンしてディレクトリに移動
-
-```bash
-git clone <repository-url>
-cd "takeout mall"
-```
-
-#### 2. Dockerサービスを起動（データベース + バックエンド）
-
-```bash
-docker-compose up -d
-```
-
-これにより以下が起動します：
-- MySQL データベース（ポート 3306）
-- Redis キャッシュ（ポート 6379）
-- Spring Boot バックエンド（ポート 8080）
-
-**デフォルト管理アカウント**: `admin` / `123456`
-
-#### 3. バックエンドサービスの確認
-
-```bash
-# コンテナの状態を確認
-docker ps
-
-# バックエンドのログを確認
-docker-compose logs -f backend
-
-# バックエンドが起動しているかテスト
-curl http://localhost:8080/
-```
-
-#### 4. フロントエンド開発サーバーを起動
-
-**重要**: フロントエンドは必ずローカルで実行してください（Dockerにはフロントエンドはありません）
-
-新しいターミナルウィンドウを開いて：
-
-```bash
-cd frontend-admin
-
-# 依存関係をインストール（初回実行時のみ必要）
-npm install
-
-# 開発サーバーを起動
-npm run serve
-```
-
-フロントエンドが起動すると、次のように表示されます：
-```
-App running at:
-- Local:   http://localhost:8888/
-- Network: http://172.16.31.6:8888/
-```
-
-#### 5. システムにアクセス
-
-- **フロントエンド管理バックエンド**: http://localhost:8888
-  - ユーザー名: `admin`
-  - パスワード: `123456`
-  
-- **バックエンドAPI**: http://localhost:8080
-
-#### 6. サービスを停止
-
-```bash
-# Dockerサービスを停止
-docker-compose down
-
-# フロントエンドを停止: フロントエンドを実行しているターミナルで Ctrl+C を押す
-```
-
-### 方式2: ローカル開発（手動構成）
-
-#### ステップ1: プロジェクトをクローン
-
-```bash
-git clone <repository-url>
-cd "takeout mall"
-```
-
-#### ステップ2: データベースの準備
-
-MySQLデータベースを作成：
-
-```bash
-mysql -u root -p
-```
-
-```sql
--- データベースを作成
-CREATE DATABASE sky_take_out CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- データベースを使用
-USE sky_take_out;
-
--- 初期化スクリプトをインポート
-SOURCE docs/sql/init.sql;
-```
-
-#### ステップ3: Redisをインストール
-
-**macOS**:
-```bash
-brew install redis
-brew services start redis
-```
-
-**Linux**:
-```bash
-sudo apt-get install redis-server
-sudo systemctl start redis
-```
-
-#### ステップ4: バックエンドを構成
-
-`backend/sky-server/src/main/resources/application-dev.yml` を編集：
-
-```yaml
-sky:
-  datasource:
-    host: localhost
-    port: 3306
-    database: sky_take_out
-    username: root
-    password: your_password  # あなたのMySQLパスワードに変更
-
-  redis:
-    host: localhost
-    port: 6379
-    password: 123456         # Redisパスワード（設定されている場合）
-    database: 10
-```
-
-#### ステップ5: バックエンドをコンパイル（JDK 11が必要）
-
-**重要**: JDK 11を使用する必要があります
-
-```bash
-# Javaバージョンを確認
-java -version  # 11.x.x が表示されるはず
-
-# バージョンが正しくない場合は、JDK 11に切り替え
-# macOSでjenvを使用：
-jenv local 11.0
-
-# またはJAVA_HOMEを設定
-export JAVA_HOME=$(/usr/libexec/java_home -v 11)
-
-# バックエンドディレクトリに移動
-cd backend
-
-# クリーンアップしてパッケージ化
-mvn clean package -DskipTests
-
-# コンパイル完了を待つ...
-```
-
-#### ステップ6: バックエンドを実行
-
-```bash
-cd backend
-java -jar sky-server/target/sky-server-1.0-SNAPSHOT.jar
-```
-
-以下の情報が表示されれば起動成功です：
-```
-Started SkyApplication in X.XXX seconds
-```
-
-#### ステップ7: フロントエンドをインストールして実行
-
-新しいターミナルを開いて：
-
-```bash
-cd frontend-admin
-
-# 依存関係をインストール（初回実行時）
-npm install
-
-# 開発サーバーを起動
-npm run serve
-```
-
-フロントエンド起動後、アクセス: http://localhost:8888
-
-#### ステップ8: システムにログイン
-
-- ユーザー名: `admin`
-- パスワード: `123456`
-
-### なぜフロントエンドがDockerにないのか？
-
-1. **開発に適している**: ローカル開発モードにはホットリロードがあり、コードを変更すると即座に反映されます
-2. **デバッグが容易**: ブラウザで直接デバッグでき、ソースコードを確認できます
-3. **パフォーマンスの問題**: フロントエンドの本番ビルドで依存関係の互換性の問題が発生しました（node-fibersがARM Macで問題）
-4. **現在の状態**: 開発モードでフロントエンドは正常に動作し、すべての機能を正常に使用できます
-
-## 前置要件
-
-- **JDK 11** （必須は11、他のバージョンは使用不可）
-- Maven 3.6+
-- Node.js 14+
-- Docker & Docker Compose（推奨方式）
-- MySQL 8.0+（Dockerを使用しない場合）
-- Redis 7.0+（Dockerを使用しない場合）
-
-## デフォルトアカウント
-
-### 管理バックエンド
-- ユーザー名: `admin`
-- パスワード: `123456`
-
-### データベース
-- ホスト: `localhost`
-- ポート: `3306`
-- データベース名: `sky_take_out`
-- ユーザー名: `root`
-- パスワード: `root123456`（Docker環境）
-- パスワード: あなたのローカルパスワード（ローカル環境）
-
-### Redis
-- ホスト: `localhost`
-- ポート: `6379`
-- パスワード: `123456`（Docker環境）
-- パスワード: なしまたはあなたの設定（ローカル環境）
-
-## クイックスタート手順まとめ
-
-### 最も簡単な起動方法（3ステップ）
+- **管理バックエンド**: Vue 2 + TypeScript + Element UI（本番環境にデプロイ済み）
+- **WeChat MiniProgram**: uni-app（ローカル開発用のみ、デプロイなし）
+
+### インフラストラクチャ
+- **コンテナ化**: Docker + Docker Compose
+  - バックエンド: Spring Boot アプリケーションを Docker コンテナ化
+  - フロントエンド: Vue.js アプリケーションを Nginx コンテナで配信
+  - データベース: MySQL 8.0 を Docker コンテナで実行
+  - キャッシュ: Redis 7.0 を Docker コンテナで実行
+- **Webサーバー**: Nginx（Docker コンテナ内で実行）
+- **デプロイ**: Docker Compose v2 を使用した一括デプロイ
+- **コンテナオーケストレーション**: Docker Compose によるマルチコンテナ管理
+
+## 🚀 クイックスタート
+
+### ローカル開発環境
 
 ```bash
 # 1. プロジェクトをクローン
 git clone <repository-url>
 cd "takeout mall"
 
-# 2. データベースとバックエンドを起動（Docker）
-docker-compose up -d
+# 2. Docker Compose でサービスを起動
+docker compose -f docker-compose.yml up -d
 
-# 3. フロントエンドを起動（新しいターミナル）
+# 3. フロントエンド開発サーバーを起動（別ターミナル）
 cd frontend-admin
-npm install  # 初回実行時のみ必要
+npm install
 npm run serve
 ```
 
-アクセス: http://localhost:8888（admin / 123456）
+**アクセス:**
+- フロントエンド管理バックエンド: http://localhost:8888
+- バックエンドAPI: http://localhost:8080
+- デフォルトアカウント: `admin` / `123456`
 
-### サービスリスト
+### 本番環境デプロイ
 
-| サービス | アドレス | 説明 |
-|---------|----------|------|
-| フロントエンド管理バックエンド | http://localhost:8888 | ローカルで `npm run serve` を実行 |
-| バックエンドAPI | http://localhost:8080 | Dockerで実行 |
-| MySQL | localhost:3306 | Dockerで実行 |
-| Redis | localhost:6379 | Dockerで実行 |
+**注意**: 現在のデプロイ構成には、管理バックエンドとバックエンドAPIのみが含まれています。WeChat MiniProgramはデプロイしていません（公開手続きが複雑なため）。
 
-## コア機能
+**本プロジェクトは Docker を使用してデプロイされます。すべてのサービス（MySQL、Redis、バックエンド、フロントエンド）は Docker コンテナとして実行されます。**
 
-- ✅ スタッフログイン認証
-- ✅ カテゴリ管理
-- ✅ 料理管理
-- ✅ セットメニュー管理
-- ✅ 注文管理
-- ✅ データ統計
-- ✅ WeChat MiniProgram注文
-- ✅ WeChat Pay統合
-- ✅ 注文ステータスリアルタイム更新
+詳細なデプロイ手順については、[DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md) を参照してください。
 
-## 一般的な問題のトラブルシューティング
-
-### 1. ポートが使用中
+**簡単なデプロイ手順:**
 
 ```bash
-# ポートの使用状況を確認
-lsof -i :8080  # バックエンドポート
-lsof -i :3306  # MySQLポート
-lsof -i :6379  # Redisポート
-lsof -i :8888  # フロントエンドポート
+# 1. サーバーにプロジェクトファイルをアップロード
+scp -r "/path/to/takeout mall" root@your-server:/root/takeout-mall
 
-# 使用中の場合、プロセスを停止するか設定を変更
+# 2. サーバーに SSH 接続
+ssh root@your-server
+
+# 3. サーバー環境を初期化
+cd /root/takeout-mall
+chmod +x server-setup.sh
+./server-setup.sh
+
+# 4. プロジェクトをデプロイ（管理バックエンド + バックエンドAPI）
+chmod +x deploy.sh
+./deploy.sh
 ```
 
-### 2. Javaバージョンの問題
+**デプロイされるサービス（すべて Docker コンテナ）:**
+- ✅ MySQL 8.0（Docker コンテナで実行）
+- ✅ Redis 7.0（Docker コンテナで実行）
+- ✅ Spring Boot バックエンド（Docker コンテナで実行）
+- ✅ Vue.js 管理バックエンド（Nginx Docker コンテナで配信）
 
-**エラーメッセージ**: `Fatal error compiling: java.lang.NoSuchFieldError`
+**デプロイされないサービス:**
+- ⚠️ WeChat MiniProgram（ローカル開発用のみ）
 
-**解決策**: JDK 11を使用する必要があります
+## 📁 プロジェクト構造
+
+```
+takeout mall/
+├── backend/                 # バックエンドサービス（Spring Boot）
+│   ├── sky-common/         # 共通モジュール
+│   ├── sky-pojo/           # エンティティクラス
+│   └── sky-server/         # アプリケーションサービス
+├── frontend-admin/          # 管理バックエンド（Vue.js）
+│   ├── Dockerfile          # 前端 Dockerfile
+│   ├── nginx.conf          # Nginx 配置
+│   └── .dockerignore       # Docker 忽略文件
+├── miniprogram/             # WeChat MiniProgram（ローカル開発用、デプロイなし）
+├── docs/                    # ドキュメント
+│   ├── sql/                # データベース初期化スクリプト
+│   └── screenshots/        # スクリーンショット
+├── docker-compose.yml       # ローカル開発用 Docker Compose 設定
+├── docker-compose.prod.yml  # 本番環境用 Docker Compose 設定
+├── Dockerfile               # バックエンド用 Dockerfile
+├── frontend-admin/Dockerfile # フロントエンド用 Dockerfile
+├── server-setup.sh          # サーバー環境初期化スクリプト
+├── deploy.sh                # デプロイスクリプト
+└── README.md                # プロジェクト説明
+```
+
+## 📚 ドキュメント
+
+- [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md) - 詳細なデプロイガイド
+- [DEPLOYMENT_STEPS.md](./DEPLOYMENT_STEPS.md) - 簡易デプロイ手順
+- [DEPLOYMENT_CHECKLIST.md](./DEPLOYMENT_CHECKLIST.md) - デプロイチェックリスト
+- [USER_GUIDE.md](./USER_GUIDE.md) - ユーザー操作ガイド
+
+## 🔧 前置要件
+
+### ローカル開発
+- **JDK 17**
+- Maven 3.6+
+- Node.js 14+
+- Docker & Docker Compose v2
+
+### 本番環境
+- Docker & Docker Compose v2
+- サーバー: Ubuntu 22.04+ または CentOS 7+
+- メモリ: 最低 2GB RAM
+- ディスク: 最低 20GB 空き容量
+
+## 🐳 Docker デプロイメント
+
+本プロジェクトは **Docker** と **Docker Compose** を使用してコンテナ化されています。すべてのサービスは Docker コンテナとして実行され、開発環境と本番環境の両方で一貫した動作を保証します。
+
+### Docker を使用する利点
+
+- ✅ **環境の一貫性**: 開発環境と本番環境で同じ Docker イメージを使用
+- ✅ **簡単なデプロイ**: Docker Compose で一括起動・停止が可能
+- ✅ **依存関係の管理**: データベース、キャッシュ、アプリケーションを個別にコンテナ化
+- ✅ **スケーラビリティ**: コンテナ単位で簡単にスケールアップが可能
+- ✅ **リソース効率**: コンテナ間でリソースを効率的に共有
+
+### Docker Compose コマンド
+
+### ローカル開発環境
+
 ```bash
-# バージョンを確認
-java -version
+# サービスを起動
+docker compose -f docker-compose.yml up -d
 
-# JDK 11に切り替え
-jenv local 11.0
+# サービスを停止
+docker compose -f docker-compose.yml down
+
+# ログを確認
+docker compose -f docker-compose.yml logs -f
 ```
 
-### 3. フロントエンドがバックエンドに接続できない
-
-確認：
-- バックエンドサービスが起動しているか（http://localhost:8080）
-- ファイアウォール設定
-- `frontend-admin/vue.config.js` のプロキシ設定を確認
-
-### 4. Dockerの起動に失敗
+### 本番環境
 
 ```bash
-# 詳細ログを表示
-docker-compose logs
+# サービスを起動
+docker compose -f docker-compose.prod.yml --env-file .env.prod up -d
 
-# コンテナの状態を確認
-docker ps -a
+# サービスを停止
+docker compose -f docker-compose.prod.yml --env-file .env.prod down
 
-# サービスを再起動
-docker-compose restart
-
-# 完全にリセット（データは削除されます）
-docker-compose down -v
-docker-compose up -d
+# ログを確認
+docker compose -f docker-compose.prod.yml --env-file .env.prod logs -f
 ```
 
-### 5. データベース接続に失敗
+## ⚠️ トラブルシューティング
 
-確認：
-- MySQLサービスが起動しているか
+### Docker Compose コマンドが見つからない
+
+**問題**: `docker-compose: command not found`
+
+**解決策**: Docker Compose v2 では `docker compose`（ハイフンなし）を使用します。
+
+```bash
+# 正しいコマンド
+docker compose version
+```
+
+### フロントエンドのビルドエラー
+
+**問題**: `Cannot find module '../package.json'`
+
+**解決策**: `.dockerignore` ファイルを作成して `node_modules` を除外します。
+
+```bash
+cd frontend-admin
+echo "node_modules" > .dockerignore
+```
+
+### データベース接続に失敗
+
+確認事項:
+- MySQL サービスが起動しているか
 - ユーザー名とパスワードが正しいか
 - データベース `sky_take_out` が存在するか
-- `init.sql` がインポートされているか
 
 ```bash
-# Docker方式でMySQLログを表示
-docker-compose logs mysql
-
-# MySQLコンテナに入る
-docker exec -it sky-mysql mysql -uroot -proot123456
+# Docker 方式で MySQL ログを表示
+docker compose -f docker-compose.yml logs mysql
 ```
 
-### 6. フロントエンドの依存関係のインストールに失敗
+## 📱 WeChat MiniProgram について
 
-```bash
-# node_modulesを削除して再インストール
-rm -rf node_modules package-lock.json
-npm install
+**ローカル開発:**
+- WeChat MiniProgramは、`miniprogram/` ディレクトリ内のコードをWeChat開発者ツールで開くことで、ローカルでテストできます
+- バックエンドAPIに接続して、すべての機能をテストできます
 
-# npmが遅い場合は、淘宝ミラーを使用
-npm install --registry=https://registry.npmmirror.com
-```
+**デプロイについて:**
+- WeChat MiniProgramの公開には、WeChat公式アカウントの認証と審査が必要です
+- 個人開発者にとって手続きが複雑なため、本プロジェクトではデプロイしていません
+- 管理バックエンドとAPIのみをデプロイしており、これで管理機能とAPIの動作確認が可能です
 
-## 開発モード vs 本番モード
+## 🔒 セキュリティ注意事項
 
-### 開発モード（現在推奨）
-- バックエンド: `java -jar sky-server/target/sky-server-1.0-SNAPSHOT.jar`
-- フロントエンド: `npm run serve`
-- 利点: ホットリロード、デバッグが容易
-- 欠点: ターミナルを開き続ける必要がある
+1. **環境変数**: `.env.prod` ファイルは Git に含めないでください
+2. **パスワード**: 本番環境では強力なパスワードを使用してください
+3. **証明書**: 微信支付証明書ファイルは安全に保管してください
+4. **ファイアウォール**: 必要最小限のポートのみ開放してください
+5. **HTTPS**: 本番環境では HTTPS を使用することを推奨します
+6. **WeChat MiniProgram**: ローカル開発環境でのみ使用し、本番環境ではデプロイしていません
 
-### 本番モード（デプロイ時）
-- バックエンド: JARとしてパッケージ化済み、直接実行可能
-- フロントエンド: `npm run build` 後にNginxにデプロイ
-- 利点: パフォーマンスが良く、バックグラウンドで実行可能
-- 欠点: Nginxの設定が必要
-
-## サービスの停止
-
-### Dockerサービスを停止
-```bash
-docker-compose down        # 停止してコンテナを削除
-docker-compose stop        # コンテナを停止するだけで削除しない
-```
-
-### ローカルサービスを停止
-- バックエンド/フロントエンド: 実行中のターミナルで `Ctrl+C` を押す
-
-## ライセンス
+## 📝 ライセンス
 
 MIT License
 
-## 貢献
+## 🤝 貢献
 
 Issue と Pull Request の提出を歓迎します！
 
-## 連絡先
+## 📧 連絡先
 
 問題がある場合は、Issueを提出するか、プロジェクトメンテナーに連絡してください。

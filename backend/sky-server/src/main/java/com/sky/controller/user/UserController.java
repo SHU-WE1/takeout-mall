@@ -23,7 +23,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/user/user")
-@Api(tags = "C端用户相关接口")
+@Api(tags = "ユーザー側-ユーザーAPI")
 @Slf4j
 public class UserController {
 
@@ -33,7 +33,7 @@ public class UserController {
     private JwtProperties jwtProperties;
 
     @PostMapping("/login")
-    @ApiOperation("微信登录")
+    @ApiOperation("WeChatログイン")
     public Result<UserLoginVO> login(@RequestBody UserLoginDTO userLoginDTO){
         log.info("微信用户登录：{}",userLoginDTO);
 

@@ -14,7 +14,7 @@ import java.util.List;
 
 @RestController("userCategoryController")
 @RequestMapping("/user/category")
-@Api(tags = "C端-分类接口")
+@Api(tags = "ユーザー側-カテゴリAPI")
 public class CategoryController {
 
     @Autowired
@@ -26,7 +26,7 @@ public class CategoryController {
      * @return
      */
     @GetMapping("list")
-    @ApiOperation("查询分类")
+    @ApiOperation("カテゴリ一覧取得")
     public Result<List<Category>> list(Integer type) {
         List<Category> categoryList = categoryService.list(type);
         return Result.success(categoryList);
