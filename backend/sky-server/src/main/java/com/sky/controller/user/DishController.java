@@ -16,12 +16,20 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @RestController("userDishController")
 @RequestMapping("/user/dish")
 @Slf4j
 @Api(tags = "ユーザー側-料理閲覧API")
 public class DishController {
+
+    // キャッシュペネトレーション対策：空値マーカー
+    private static final String CACHE_NULL_VALUE = "NULL_VALUE";
+    // 空値キャッシュの有効期限（秒）
+    private static final long NULL_CACHE_TTL = 60L;
+    // 通常データキャッシュの有効期限（固定値、フェーズ2でランダムに変更）
+    private static final long CACHE_TTL_NORMAL = 2L;
 
     @Autowired
     private DishService dishService;
@@ -42,19 +50,34 @@ public class DishController {
         String key = "dish_" + categoryId;
 
         //查询redis中是否存在菜品数据
-        List<DishVO> list = (List<DishVO>) redisTemplate.opsForValue().get(key);
-        if(list != null && list.size() > 0){
-            //如果存在，直接返回，无需查询数据库
-            return Result.success(list);
+        Object cacheData = redisTemplate.opsForValue().get(key);
+        
+        // キャッシュヒット時の処理
+        if (cacheData != null) {
+            // 空値マーカーの場合、空リストを返す（キャッシュペネトレーション対策）
+            if (CACHE_NULL_VALUE.equals(cacheData)) {
+                return Result.success(new ArrayList<>());
+            }
+            // 通常データの場合、そのまま返す
+            @SuppressWarnings("unchecked")
+            List<DishVO> cachedList = (List<DishVO>) cacheData;
+            return Result.success(cachedList);
         }
-        /// //////////////
+
+        // キャッシュ未ヒット時、データベースをクエリ
         Dish dish = new Dish();
         dish.setCategoryId(categoryId);
         dish.setStatus(StatusConstant.ENABLE);//查询起售中的菜品
-        //如果不存在，查询数据库，查询到的数据存入redis中
-        list = dishService.listWithFlavor(dish);
-        /// ///////////////////
-        redisTemplate.opsForValue().set(key,list);
+        List<DishVO> list = dishService.listWithFlavor(dish);
+
+        // クエリ結果をキャッシュに保存
+        if (list == null || list.isEmpty()) {
+            // キャッシュペネトレーション対策：空値マーカーを短期間キャッシュ
+            redisTemplate.opsForValue().set(key, CACHE_NULL_VALUE, NULL_CACHE_TTL, TimeUnit.SECONDS);
+        } else {
+            // 通常データを長期キャッシュ（フェーズ2でランダムTTLに変更予定）
+            redisTemplate.opsForValue().set(key, list, CACHE_TTL_NORMAL, TimeUnit.HOURS);
+        }
 
         return Result.success(list);
     }
