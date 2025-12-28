@@ -45,7 +45,7 @@ module.exports = {
     ...(process.env.NODE_ENV === 'production' ? {
       '@vue/cli-plugin-typescript': {
         typeCheck: false
-      }
+    }
     } : {})
   },
   // 开启代理

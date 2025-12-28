@@ -124,4 +124,18 @@ public class OrderController {
         orderService.complete(id);
         return Result.success();
     }
+
+    /**
+     * 更新订单支付状态（自动同步订单状态）
+     *
+     * @param orderId 订单ID
+     * @param payStatus 支付状态 0未支付 1已支付 2退款
+     * @return
+     */
+    @PutMapping("/updatePayStatus")
+    @ApiOperation("注文決済ステータスを更新（注文ステータスを自動同期）")
+    public Result updatePayStatus(@RequestParam Long orderId, @RequestParam Integer payStatus) {
+        orderService.updatePayStatus(orderId, payStatus);
+        return Result.success();
+    }
 }

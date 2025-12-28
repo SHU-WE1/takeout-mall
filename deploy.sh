@@ -63,15 +63,15 @@ fi
 
 # 停止现有容器
 echo "正在停止现有容器..."
-docker-compose -f docker-compose.prod.yml --env-file .env.prod down || true
+docker compose -f docker-compose.prod.yml --env-file .env.prod down || true
 
 # 构建镜像
 echo "正在构建 Docker 镜像..."
-docker-compose -f docker-compose.prod.yml --env-file .env.prod build --no-cache
+docker compose -f docker-compose.prod.yml --env-file .env.prod build --no-cache
 
 # 启动服务
 echo "正在启动服务..."
-docker-compose -f docker-compose.prod.yml --env-file .env.prod up -d
+docker compose -f docker-compose.prod.yml --env-file .env.prod up -d
 
 # 等待服务启动
 echo "等待服务启动..."
@@ -79,13 +79,13 @@ sleep 10
 
 # 检查服务状态
 echo "检查服务状态..."
-docker-compose -f docker-compose.prod.yml --env-file .env.prod ps
+docker compose -f docker-compose.prod.yml --env-file .env.prod ps
 
 # 显示日志
 echo "=========================================="
 echo "查看服务日志（最近50行）..."
 echo "=========================================="
-docker-compose -f docker-compose.prod.yml --env-file .env.prod logs --tail=50
+docker compose -f docker-compose.prod.yml --env-file .env.prod logs --tail=50
 
 echo "=========================================="
 echo "部署完成！"
@@ -95,9 +95,9 @@ echo "  - 前端: http://$(hostname -I | awk '{print $1}')"
 echo "  - 后端API: http://$(hostname -I | awk '{print $1}'):8080"
 echo "=========================================="
 echo "常用命令："
-echo "  查看日志: docker-compose -f docker-compose.prod.yml --env-file .env.prod logs -f"
-echo "  停止服务: docker-compose -f docker-compose.prod.yml --env-file .env.prod down"
-echo "  重启服务: docker-compose -f docker-compose.prod.yml --env-file .env.prod restart"
-echo "  查看状态: docker-compose -f docker-compose.prod.yml --env-file .env.prod ps"
+echo "  查看日志: docker compose -f docker-compose.prod.yml --env-file .env.prod logs -f"
+echo "  停止服务: docker compose -f docker-compose.prod.yml --env-file .env.prod down"
+echo "  重启服务: docker compose -f docker-compose.prod.yml --env-file .env.prod restart"
+echo "  查看状态: docker compose -f docker-compose.prod.yml --env-file .env.prod ps"
 echo "=========================================="
 

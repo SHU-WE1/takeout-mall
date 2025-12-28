@@ -84,6 +84,16 @@
             <span style="margin-right: 10px">￥{{ (scope.row.price ).toFixed(2)*100/100 }}</span>
           </template>
         </el-table-column>
+        <el-table-column prop="stock"
+                         label="在庫数量"
+                         width="100"
+                         align="center">
+          <template slot-scope="scope">
+            <span :style="{ color: (scope.row.stock || 0) <= 10 ? '#f56c6c' : '' }">
+              {{ scope.row.stock || 0 }}
+            </span>
+          </template>
+        </el-table-column>
         <el-table-column label="販売状態">
           <template slot-scope="scope">
             <div class="tableColumn-status"

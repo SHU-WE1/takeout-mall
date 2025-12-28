@@ -32,6 +32,14 @@
             <el-input v-model="ruleForm.price"
                       placeholder="セットメニュー価格を設定してください" />
           </el-form-item>
+          <el-form-item label="在庫数量："
+                        prop="stock">
+            <el-input-number v-model="ruleForm.stock"
+                             :min="0"
+                             :max="9999"
+                             placeholder="在庫数量を入力してください"
+                             style="width: 100%" />
+          </el-form-item>
         </div>
         <div>
           <el-form-item label="セットメニュー料理："
@@ -202,7 +210,8 @@ export default class extends Vue {
     description: '',
     dishList: [],
     status: true,
-    idType: ''
+    idType: '',
+    stock: 0
   }
 
   get rules() {
@@ -267,6 +276,7 @@ export default class extends Vue {
         this.ruleForm = res.data.data
         this.ruleForm.status = res.data.data.status == '1'
         ;(this.ruleForm as any).price = res.data.data.price
+        ;(this.ruleForm as any).stock = res.data.data.stock || 0
         // this.imageUrl = `http://172.17.2.120:8080/common/download?name=${res.data.data.image}`
         this.imageUrl = res.data.data.image
         this.checkList = res.data.data.setmealDishes
@@ -380,7 +390,8 @@ export default class extends Vue {
                     dishList: [],
                     status: true,
                     id: '',
-                    idType: ''
+                    idType: '',
+                    stock: 0
                   } as any
                   this.imageUrl = ''
                 }

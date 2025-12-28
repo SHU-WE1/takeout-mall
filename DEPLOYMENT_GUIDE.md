@@ -212,20 +212,69 @@ chmod 644 certs/*.pem
 
 ## 更新部署
 
-如果需要更新代码：
+### 方式一：使用 Git 拉取更新（推荐）
 
-1. **在本地更新代码**
+如果服务器上的项目已经是 Git 仓库：
+
+1. **SSH 连接到服务器**
+   ```bash
+   ssh root@167.179.78.66
+   ```
+
+2. **进入项目目录并拉取最新代码**
+   ```bash
+   cd /root/takeout-mall
+   git pull origin main
+   # 或者
+   git pull origin master
+   ```
+
+3. **更新后端服务**
+   ```bash
+   # 使用更新脚本（推荐）
+   chmod +x update-backend.sh
+   ./update-backend.sh
+   
+   # 或者手动执行
+   docker compose -f docker-compose.prod.yml --env-file .env.prod stop backend
+   docker compose -f docker-compose.prod.yml --env-file .env.prod build --no-cache backend
+   docker compose -f docker-compose.prod.yml --env-file .env.prod up -d backend
+   ```
+
+### 方式二：使用 rsync 上传更新
+
+如果服务器上的项目不是 Git 仓库：
+
+1. **在本地更新代码并推送到 Git**
+   ```bash
+   git add .
+   git commit -m "更新代码"
+   git push
+   ```
+
 2. **重新上传到服务器**
    ```bash
    rsync -avz --exclude 'node_modules' --exclude 'target' --exclude '.git' \
      /Users/weishu/Desktop/takeout\ mall/ root@167.179.78.66:/root/takeout-mall/
    ```
-3. **在服务器上重新部署**
+
+3. **在服务器上更新后端服务**
    ```bash
    ssh root@167.179.78.66
    cd /root/takeout-mall
-   ./deploy.sh
+   chmod +x update-backend.sh
+   ./update-backend.sh
    ```
+
+### 方式三：完整重新部署
+
+如果需要重新部署所有服务（包括前端、MySQL、Redis）：
+
+```bash
+ssh root@167.179.78.66
+cd /root/takeout-mall
+./deploy.sh
+```
 
 ## 安全建议
 

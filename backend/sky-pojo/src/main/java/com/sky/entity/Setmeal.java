@@ -33,6 +33,12 @@ public class Setmeal implements Serializable {
     //状态 0:停用 1:启用
     private Integer status;
 
+    //库存数量
+    private Integer stock;
+
+    //バージョン（楽観ロック用）
+    private Integer version;
+
     //描述信息
     private String description;
 

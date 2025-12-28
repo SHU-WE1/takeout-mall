@@ -23,6 +23,8 @@ public class DishDTO implements Serializable {
     private String description;
     //0 停售 1 起售
     private Integer status;
+    //库存数量
+    private Integer stock;
     //口味
     private List<DishFlavor> flavors = new ArrayList<>();
 

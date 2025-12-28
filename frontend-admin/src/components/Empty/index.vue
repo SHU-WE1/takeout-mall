@@ -7,7 +7,7 @@
            alt="">
       <img v-else
            src="../../assets/search_table_empty.png">
-      <p>{{ !isSearch ? '这里空空如也~' : 'Sorry，木有找到您搜索的内容哦~' }}</p>
+      <p>{{ !isSearch ? 'データがありません' : '検索結果が見つかりませんでした' }}</p>
     </div>
   </div>
 </template>

@@ -33,6 +33,14 @@
             <el-input v-model="ruleForm.price"
                       placeholder="料理価格を設定してください" />
           </el-form-item>
+          <el-form-item label="在庫数量："
+                        prop="stock">
+            <el-input-number v-model="ruleForm.stock"
+                             :min="0"
+                             :max="9999"
+                             placeholder="在庫数量を入力してください"
+                             style="width: 100%" />
+          </el-form-item>
         </div>
         <el-form-item label="味付け・調理法設定：">
           <el-form-item>
@@ -169,7 +177,8 @@ export default class extends Vue {
     description: '',
     dishFlavors: [],
     status: true,
-    categoryId: ''
+    categoryId: '',
+    stock: 0
   }
 
   get rules() {
@@ -264,6 +273,7 @@ export default class extends Vue {
         this.ruleForm = { ...res.data.data }
         this.ruleForm.price = String(res.data.data.price)
         this.ruleForm.status = res.data.data.status == '1'
+        this.ruleForm.stock = res.data.data.stock || 0
         this.dishFlavors =
           res.data.data.flavors &&
           res.data.data.flavors.map(obj => ({
@@ -379,7 +389,8 @@ export default class extends Vue {
                     description: '',
                     dishFlavors: [],
                     status: true,
-                    categoryId: ''
+                    categoryId: '',
+                    stock: 0
                   }
                   this.restKey++
                 }

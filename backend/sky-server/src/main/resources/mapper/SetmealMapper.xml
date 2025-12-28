@@ -4,8 +4,8 @@
 <mapper namespace="com.sky.mapper.SetmealMapper">
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
-        insert into setmeal (name, category_id, price, image, description, create_time, update_time, create_user,update_user, status)
-        values (#{name}, #{categoryId}, #{price}, #{image}, #{description}, #{createTime}, #{updateTime}, #{createUser}, #{updateUser}, #{status})
+        insert into setmeal (name, category_id, price, image, description, create_time, update_time, create_user,update_user, status, stock)
+        values (#{name}, #{categoryId}, #{price}, #{image}, #{description}, #{createTime}, #{updateTime}, #{createUser}, #{updateUser}, #{status}, #{stock})
     </insert>
 
     <select id="list" parameterType="Setmeal" resultType="Setmeal">
@@ -48,6 +48,7 @@
             <if test="image != null">image = #{image},</if>
             <if test="description != null">description = #{description},</if>
             <if test="status != null">status = #{status},</if>
+            <if test="stock != null">stock = #{stock},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="updateUser != null">update_user = #{updateUser},</if>
         </set>

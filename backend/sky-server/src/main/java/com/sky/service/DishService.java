@@ -28,4 +28,12 @@ public interface DishService {
     void startOrStop(Integer status, Long id);
 
     List<Dish> list(Long categoryId);
+
+    /**
+     * 在庫を減少させる（楽観ロック使用）
+     *
+     * @param dishId    菜品ID
+     * @param quantity  購入数量（減少させる在庫数）
+     */
+    void reduceStock(Long dishId, Integer quantity);
 }

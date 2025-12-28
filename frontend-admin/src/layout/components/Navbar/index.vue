@@ -201,7 +201,7 @@ export default class extends Vue {
           that.$refs.audioVo2.play()
         }
         that.$notify({
-          title: jsonMsg.type === 1 ? '待接单' : '催单',
+          title: jsonMsg.type === 1 ? '受注待ち' : '催促',
           duration: 0,
           dangerouslyUseHTMLString: true,
           onClick: () => {

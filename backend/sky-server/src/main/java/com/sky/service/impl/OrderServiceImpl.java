@@ -463,4 +463,38 @@ public class OrderServiceImpl implements OrderService {
         return String.join("", orderDishList);
     }
 
+    /**
+     * 更新订单支付状态，自动同步订单状态
+     *
+     * @param orderId 订单ID
+     * @param payStatus 支付状态 0未支付 1已支付 2退款
+     */
+    @Override
+    public void updatePayStatus(Long orderId, Integer payStatus) {
+        // 查询当前订单信息
+        Orders ordersDB = orderMapper.getById(orderId);
+        if (ordersDB == null) {
+            throw new OrderBusinessException(MessageConstant.ORDER_NOT_FOUND);
+        }
+
+        Orders orders = new Orders();
+        orders.setId(orderId);
+        orders.setPayStatus(payStatus);
+
+        // 如果支付状态变为已支付(1)，且当前订单状态是待付款(1)，自动将订单状态改为待接单(2)
+        if (payStatus == Orders.PAID && ordersDB.getStatus() == Orders.PENDING_PAYMENT) {
+            orders.setStatus(Orders.TO_BE_CONFIRMED);
+            orders.setCheckoutTime(LocalDateTime.now());
+            log.info("支付状态更新为已支付，订单状态自动更新为待接单，订单ID：{}", orderId);
+        }
+        // 如果支付状态变为未支付(0)，且当前订单状态是待接单(2)，改回待付款(1)
+        else if (payStatus == Orders.UN_PAID && ordersDB.getStatus() == Orders.TO_BE_CONFIRMED) {
+            orders.setStatus(Orders.PENDING_PAYMENT);
+            log.info("支付状态更新为未支付，订单状态自动更新为待付款，订单ID：{}", orderId);
+        }
+
+        // 更新订单
+        orderMapper.update(orders);
+    }
+
 }

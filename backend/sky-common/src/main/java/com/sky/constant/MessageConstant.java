@@ -25,4 +25,8 @@ public class MessageConstant {
     public static final String ORDER_STATUS_ERROR = "订单状态错误";
     public static final String ORDER_NOT_FOUND = "订单不存在";
 
+    // 在庫関連（楽観ロック用メッセージ：日语）
+    public static final String DISH_STOCK_NOT_ENOUGH = "在庫が不足しています";
+    public static final String DISH_STOCK_UPDATE_FAILED = "在庫更新に失敗しました。他のユーザーによって変更された可能性があります";
+
 }

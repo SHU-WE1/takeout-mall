@@ -8,8 +8,8 @@ import com.sky.dto.DishDTO;
 import com.sky.dto.DishPageQueryDTO;
 import com.sky.entity.Dish;
 import com.sky.entity.DishFlavor;
-import com.sky.entity.Employee;
 import com.sky.exception.DeletionNotAllowedException;
+import com.sky.exception.OrderBusinessException;
 import com.sky.mapper.DishFlavorMapper;
 import com.sky.mapper.DishMapper;
 import com.sky.mapper.SetmealDishMapper;
@@ -185,5 +185,34 @@ public class DishServiceImpl implements DishService {
                 .status(StatusConstant.ENABLE)
                 .build();
         return dishMapper.list(dish);
+    }
+
+    /**
+     * 在庫を減少させる（楽観ロック使用）
+     *
+     * @param dishId   菜品ID
+     * @param quantity 購入数量
+     */
+    @Override
+    @Transactional
+    public void reduceStock(Long dishId, Integer quantity) {
+        // 1. 現在の在庫とバージョンを取得
+        Dish dish = dishMapper.getById(dishId);
+        if (dish == null) {
+            throw new OrderBusinessException("対象の料理が存在しません");
+        }
+
+        if (dish.getStock() == null || dish.getStock() < quantity) {
+            // 在庫不足
+            throw new OrderBusinessException(MessageConstant.DISH_STOCK_NOT_ENOUGH);
+        }
+
+        // 2. 楽観ロックで在庫を更新
+        int rows = dishMapper.updateStockWithVersion(dishId, dish.getVersion(), quantity);
+
+        if (rows == 0) {
+            // バージョン不一致または在庫不足により更新失敗
+            throw new OrderBusinessException(MessageConstant.DISH_STOCK_UPDATE_FAILED);
+        }
     }
 }

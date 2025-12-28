@@ -35,4 +35,12 @@ public interface OrderService {
     void complete(Long id);
 
     void reminder(Long id);
+
+    /**
+     * 更新订单支付状态，自动同步订单状态
+     *
+     * @param orderId 订单ID
+     * @param payStatus 支付状态 0未支付 1已支付 2退款
+     */
+    void updatePayStatus(Long orderId, Integer payStatus);
 }

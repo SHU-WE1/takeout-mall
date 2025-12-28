@@ -467,7 +467,7 @@ export default class extends Vue {
     },
     {
       value: 3,
-      label: '餐厅已打烊，暂时无法接单',
+      label: 'レストランは閉店中で、一時的に受注できません',
     },
     {
       value: 0,
@@ -486,11 +486,11 @@ export default class extends Vue {
     },
     {
       value: 3,
-      label: '骑手不足无法配送',
+      label: '配送員不足のため配送できません',
     },
     {
       value: 4,
-      label: '客户电话取消',
+      label: 'お客様からの電話によるキャンセル',
     },
     {
       value: 0,
@@ -499,43 +499,43 @@ export default class extends Vue {
   ]
   private orderList = [
     {
-      label: '全部订单',
+      label: '全注文',
       value: 0,
     },
     {
-      label: '待付款',
+      label: '支払い待ち',
       value: 1,
     },
     {
-      label: '待接单',
+      label: '受注待ち',
       value: 2,
     },
     {
-      label: '待派送',
+      label: '配送待ち',
       value: 3,
     },
     {
-      label: '派送中',
+      label: '配送中',
       value: 4,
     },
     {
-      label: '已完成',
+      label: '完了',
       value: 5,
     },
     {
-      label: '已取消',
+      label: 'キャンセル済み',
       value: 6,
     },
   ]
   get tabList() {
     return [
       {
-        label: '待接单',
+        label: '受注待ち',
         value: 2,
         num: this.orderStatics.toBeConfirmed,
       },
       {
-        label: '待派送',
+        label: '配送待ち',
         value: 3,
         num: this.orderStatics.confirmed,
       },
@@ -577,7 +577,7 @@ export default class extends Vue {
     orderAccept({ id: this.orderId })
       .then((res) => {
         if (res.data.code === 1) {
-          this.$message.success('操作成功')
+          this.$message.success('操作が成功しました')
           this.orderId = ''
           // this.dialogOrderStatus = 0
           this.dialogVisible = false
@@ -596,7 +596,7 @@ export default class extends Vue {
     this.cancelDialogVisible = true
     this.orderId = row.id
     this.dialogOrderStatus = row.status
-    this.cancelDialogTitle = '取消'
+    this.cancelDialogTitle = 'キャンセル'
     this.dialogVisible = false
     this.cancelReason = ''
   }
@@ -606,27 +606,27 @@ export default class extends Vue {
     this.cancelDialogVisible = true
     this.orderId = row.id
     this.dialogOrderStatus = row.status
-    this.cancelDialogTitle = '拒绝'
+    this.cancelDialogTitle = '拒否'
     this.dialogVisible = false
     this.cancelReason = ''
   }
   //确认取消或拒绝订单并填写原因
   confirmCancel(type) {
     if (!this.cancelReason) {
-      return this.$message.error(`请选择${this.cancelDialogTitle}原因`)
-    } else if (this.cancelReason === '自定义原因' && !this.remark) {
-      return this.$message.error(`请输入${this.cancelDialogTitle}原因`)
+      return this.$message.error(`${this.cancelDialogTitle}理由を選択してください`)
+    } else if (this.cancelReason === 'カスタム理由' && !this.remark) {
+      return this.$message.error(`${this.cancelDialogTitle}理由を入力してください`)
     }
 
-    ;(this.cancelDialogTitle === '取消' ? orderCancel : orderReject)({
+    ;(this.cancelDialogTitle === 'キャンセル' ? orderCancel : orderReject)({
       id: this.orderId,
       // eslint-disable-next-line standard/computed-property-even-spacing
-      [this.cancelDialogTitle === '取消' ? 'cancelReason' : 'rejectionReason']:
-        this.cancelReason === '自定义原因' ? this.remark : this.cancelReason,
+      [this.cancelDialogTitle === 'キャンセル' ? 'cancelReason' : 'rejectionReason']:
+        this.cancelReason === 'カスタム理由' ? this.remark : this.cancelReason,
     })
       .then((res) => {
         if (res.data.code === 1) {
-          this.$message.success('操作成功')
+          this.$message.success('操作が成功しました')
           this.cancelDialogVisible = false
           this.orderId = ''
           // this.dialogOrderStatus = 0
@@ -650,7 +650,7 @@ export default class extends Vue {
     ;(status === 3 ? deliveryOrder : completeOrder)(params)
       .then((res) => {
         if (res.data.code === 1) {
-          this.$message.success('操作成功')
+          this.$message.success('操作が成功しました')
           this.orderId = ''
           // this.dialogOrderStatus = 0
           this.dialogVisible = false

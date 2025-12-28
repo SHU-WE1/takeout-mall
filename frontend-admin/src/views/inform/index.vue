@@ -25,23 +25,23 @@
         class="right-el-button"
         v-if="status === 1 && baseData.length > 0"
         @click="handleBatch"
-        >全部已读</el-button
+        >すべて既読にする</el-button
       >
       <el-button
         icon="iconfont icon-clear"
         class="right-el-button onbutton"
         disabled
         v-else
-        >全部已读</el-button
+        >すべて既読にする</el-button
       >
     </div>
     <div class="container newBox" :class="{ hContainer: baseData.length }">
       <div class="informList" v-if="baseData.length > 0">
         <div v-for="(item, index) in baseData" :key="index">
-          <!-- 待接单 -->
+          <!-- 受注待ち -->
           <div class="item" v-if="item.type === 1">
             <div class="tit">
-              <span>【待接单】</span>{{ item.arrNew[0]
+              <span>【受注待ち】</span>{{ item.arrNew[0]
               }}<span class="fontOrderTip" @click="handleSetStatus(item.id)">
                 <router-link :to="'/order?status=' + 2">{{
                   item.arrNew[1]
@@ -52,7 +52,7 @@
           </div>
           <div class="item" v-if="item.type === 2">
             <div class="tit">
-              <i>急</i><span>【待接单】</span>{{ item.arrNew[0]
+              <i>急</i><span>【受注待ち】</span>{{ item.arrNew[0]
               }}<span class="fontOrderTip" @click="handleSetStatus(item.id)"
                 ><router-link :to="'/order?status=' + 2">{{
                   item.arrNew[1]
@@ -62,10 +62,10 @@
             </div>
           </div>
           <!-- end -->
-          <!-- 待派送 -->
+          <!-- 配送待ち -->
           <div class="item" v-if="item.type === 3">
             <div class="tit">
-              <span>【待派送】</span>{{ item.arrNew[0]
+              <span>【配送待ち】</span>{{ item.arrNew[0]
               }}<span class="fontOrderTip" @click="handleSetStatus(item.id)"
                 ><router-link :to="'/order?status=' + 2">{{
                   item.arrNew[1]
@@ -84,7 +84,7 @@
           >
             <div :class="isActive ? 'titAlready' : ''">
               <div class="tit">
-                <span>【催单】</span>{{ item.arrNew[0] }}
+                <span>【催促】</span>{{ item.arrNew[0] }}
                 <!-- <span
                   class="fontOrderTip"
                   >去处理</span
@@ -94,9 +94,9 @@
               <div v-if="shopShow && showIndex === index" class="orderInfo">
                 <p>
                   <span
-                    ><label>下单时间：</label>{{ item.details.orderTime }}</span
+                    ><label>注文時間：</label>{{ item.details.orderTime }}</span
                   ><span
-                    ><label>预计送达时间：</label
+                    ><label>予定配達時間：</label
                     >{{ item.details.estimatedDeliveryTime }}</span
                   >
                 </p>
@@ -107,7 +107,7 @@
                 </p>
                 <p>
                   <span
-                    ><label>菜品：</label>{{ item.details.orderDishes }}</span
+                    ><label>料理：</label>{{ item.details.orderDishes }}</span
                   >
                 </p>
               </div>
@@ -141,7 +141,7 @@
           >
             <div :class="isActive ? 'titAlready' : ''">
               <div class="tit">
-                <span>【今日数据】</span>认真工作的同时也要好好生活。<span
+                <span>【今日データ】</span>仕事を頑張りながら、しっかりと生活も楽しみましょう。<span
                   class="time"
                   >{{ item.createTime }}</span
                 >
@@ -149,28 +149,28 @@
               <div v-if="shopShow && showIndex === index" class="orderInfo">
                 <p>
                   <span
-                    ><label>营业额：</label>{{ item.details.turnover }}</span
+                    ><label>売上：</label>{{ item.details.turnover }}</span
                   >
                   <span
-                    ><label>有效订单：</label
-                    >{{ item.details.validOrderCount }}笔</span
+                    ><label>有効注文：</label
+                    >{{ item.details.validOrderCount }}件</span
                   >
                   <span
-                    ><label>订单完成率：</label
+                    ><label>注文完了率：</label
                     >{{ item.details.orderCompletionRate }}</span
                   >
                 </p>
                 <p>
                   <span
-                    ><label>今日新增用户：</label
+                    ><label>今日の新規ユーザー：</label
                     >{{ item.details.newUsers }}</span
                   >
                   <span
-                    ><label>今日取消：</label
-                    >{{ item.details.cancelledOrders }}笔</span
+                    ><label>今日のキャンセル：</label
+                    >{{ item.details.cancelledOrders }}件</span
                   >
                   <span
-                    ><label>今日取消金额：</label>￥{{
+                    ><label>今日のキャンセル金額：</label>￥{{
                       item.details.cancelledAmount
                     }}</span
                   >
@@ -231,12 +231,12 @@ export default class extends Vue {
   get tabList() {
     return [
       {
-        label: '未读',
+        label: '未読',
         value: 1,
         // num: this.ountUnread,
       },
       {
-        label: '已读',
+        label: '既読',
         value: 2,
         // num: 0,
       },
