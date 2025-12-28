@@ -117,6 +117,7 @@ miniprogram/mp-weixin/.cache/
 # Database dumps
 *.sql
 !docs/sql/init.sql
+!docs/sql/add_version_column.sql
 
 # OS generated files
 .DS_Store
