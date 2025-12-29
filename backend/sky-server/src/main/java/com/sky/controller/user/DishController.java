@@ -28,13 +28,28 @@ public class DishController {
     private static final String CACHE_NULL_VALUE = "NULL_VALUE";
     // 空値キャッシュの有効期限（秒）
     private static final long NULL_CACHE_TTL = 60L;
-    // 通常データキャッシュの有効期限（固定値、フェーズ2でランダムに変更）
-    private static final long CACHE_TTL_NORMAL = 2L;
+    // キャッシュアバランシェ対策：通常データキャッシュの基礎有効期限（秒）
+    private static final long CACHE_TTL_BASE = 7200L; // 2時間 = 7200秒
+    // キャッシュアバランシェ対策：ランダムオフセット（秒）
+    private static final long CACHE_TTL_RANDOM = 300L; // ±5分 = 300秒
 
     @Autowired
     private DishService dishService;
     @Autowired
     private RedisTemplate<Object, Object> redisTemplate;
+
+    /**
+     * キャッシュアバランシェ対策：ランダムTTLを生成する
+     * 基礎時間 + ランダムオフセット（-300秒 ～ +300秒）
+     * 結果：6900秒（約1.92時間）～ 7500秒（約2.08時間）
+     *
+     * @return ランダムなTTL（秒）
+     */
+    private long getRandomTTL() {
+        // 基礎時間 + ランダムオフセット（-300 から +300 秒）
+        long randomOffset = (long) (Math.random() * CACHE_TTL_RANDOM * 2 - CACHE_TTL_RANDOM);
+        return CACHE_TTL_BASE + randomOffset;
+    }
 
     /**
      * 根据分类id查询菜品
@@ -75,8 +90,9 @@ public class DishController {
             // キャッシュペネトレーション対策：空値マーカーを短期間キャッシュ
             redisTemplate.opsForValue().set(key, CACHE_NULL_VALUE, NULL_CACHE_TTL, TimeUnit.SECONDS);
         } else {
-            // 通常データを長期キャッシュ（フェーズ2でランダムTTLに変更予定）
-            redisTemplate.opsForValue().set(key, list, CACHE_TTL_NORMAL, TimeUnit.HOURS);
+            // キャッシュアバランシェ対策：通常データをランダムTTLでキャッシュ
+            long randomTTL = getRandomTTL();
+            redisTemplate.opsForValue().set(key, list, randomTTL, TimeUnit.SECONDS);
         }
 
         return Result.success(list);
