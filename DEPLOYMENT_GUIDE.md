@@ -1,44 +1,44 @@
-# 服务器部署指南
+# Server Deployment Guide
 
-## 服务器信息
+## Server Information
 
-- **IP地址**: 167.179.78.66
+- **IP Address**: 167.179.78.66
 - **IPv6**: 2001:19f0:7001:28a8:5400:05ff:fec1:8e1c
-- **用户名**: root
-- **密码**: `your_server_password`（请使用实际的服务器密码）
+- **Username**: root
+- **Password**: `your_server_password` (use your actual server password)
 
-## 部署步骤
+## Deployment Steps
 
-### 第一步：服务器环境初始化
+### Step 1: Server Environment Initialization
 
-1. **连接到服务器**
+1. **Connect to Server**
    ```bash
    ssh root@167.179.78.66
    ```
 
-2. **上传项目文件到服务器**
+2. **Upload Project Files to Server**
    
-   在本地执行（需要先安装 `rsync` 或使用 `scp`）：
+   Execute locally (requires `rsync` or `scp`):
    ```bash
-   # 使用 rsync（推荐，可以排除不需要的文件）
+   # Using rsync (recommended, can exclude unnecessary files)
    rsync -avz --exclude 'node_modules' --exclude 'target' --exclude '.git' \
      /Users/weishu/Desktop/takeout\ mall/ root@167.179.78.66:/root/takeout-mall/
    
-   # 或使用 scp
+   # Or using scp
    scp -r /Users/weishu/Desktop/takeout\ mall root@167.179.78.66:/root/takeout-mall
    ```
 
-3. **上传微信支付证书文件**
+3. **Upload WeChat Pay Certificate Files**
    ```bash
-   # 在服务器上创建 certs 目录
+   # Create certs directory on server
    ssh root@167.179.78.66 "mkdir -p /root/takeout-mall/certs"
    
-   # 上传证书文件
+   # Upload certificate files
    scp apiclient_key.pem root@167.179.78.66:/root/takeout-mall/certs/
    scp wechatpay_*.pem root@167.179.78.66:/root/takeout-mall/certs/
    ```
 
-4. **在服务器上运行初始化脚本**
+4. **Run Initialization Script on Server**
    ```bash
    ssh root@167.179.78.66
    cd /root/takeout-mall
@@ -46,219 +46,219 @@
    ./server-setup.sh
    ```
 
-   这个脚本会：
-   - 更新系统包
-   - 安装 Docker
-   - 安装 Docker Compose
-   - 安装 Git
-   - 配置防火墙（开放 22, 80, 8080 端口）
+   This script will:
+   - Update system packages
+   - Install Docker
+   - Install Docker Compose
+   - Install Git
+   - Configure firewall (open ports 22, 80, 8080)
 
-### 第二步：部署项目
+### Step 2: Deploy Project
 
-1. **进入项目目录**
+1. **Navigate to Project Directory**
    ```bash
    ssh root@167.179.78.66
    cd /root/takeout-mall
    ```
 
-2. **检查必要文件**
+2. **Check Required Files**
    ```bash
-   # 确认以下文件存在
+   # Verify these files exist
    ls -la docker-compose.prod.yml
    ls -la .env.prod
    ls -la certs/apiclient_key.pem
    ls -la certs/wechatpay_*.pem
    ```
 
-3. **运行部署脚本**
+3. **Run Deployment Script**
    ```bash
    chmod +x deploy.sh
    ./deploy.sh
    ```
 
-   部署脚本会：
-   - 检查 Docker 和 Docker Compose
-   - 检查必要文件
-   - 停止现有容器
-   - 构建 Docker 镜像
-   - 启动所有服务
-   - 显示服务状态和日志
+   The deployment script will:
+   - Check Docker and Docker Compose
+   - Check required files
+   - Stop existing containers
+   - Build Docker images
+   - Start all services
+   - Display service status and logs
 
-### 第三步：验证部署
+### Step 3: Verify Deployment
 
-1. **检查服务状态**
+1. **Check Service Status**
    ```bash
-   docker-compose -f docker-compose.prod.yml --env-file .env.prod ps
+   docker compose -f docker-compose.prod.yml --env-file .env.prod ps
    ```
 
-   应该看到所有服务都在运行：
+   You should see all services running:
    - sky-mysql (MySQL)
    - sky-redis (Redis)
-   - sky-backend (后端服务)
-   - sky-frontend (前端服务)
+   - sky-backend (Backend service)
+   - sky-frontend (Frontend service)
 
-2. **查看服务日志**
+2. **View Service Logs**
    ```bash
-   # 查看所有服务日志
-   docker-compose -f docker-compose.prod.yml --env-file .env.prod logs -f
+   # View all service logs
+   docker compose -f docker-compose.prod.yml --env-file .env.prod logs -f
    
-   # 查看特定服务日志
-   docker-compose -f docker-compose.prod.yml --env-file .env.prod logs -f backend
-   docker-compose -f docker-compose.prod.yml --env-file .env.prod logs -f frontend
+   # View specific service logs
+   docker compose -f docker-compose.prod.yml --env-file .env.prod logs -f backend
+   docker compose -f docker-compose.prod.yml --env-file .env.prod logs -f frontend
    ```
 
-3. **测试访问**
-   - 前端: http://167.179.78.66
-   - 后端API: http://167.179.78.66:8080
-   - API文档: http://167.179.78.66:8080/doc.html
+3. **Test Access**
+   - Frontend: http://167.179.78.66
+   - Backend API: http://167.179.78.66:8080
+   - API Documentation: http://167.179.78.66:8080/doc.html
 
-## 常用管理命令
+## Common Management Commands
 
-### 查看服务状态
+### View Service Status
 ```bash
-docker-compose -f docker-compose.prod.yml --env-file .env.prod ps
+docker compose -f docker-compose.prod.yml --env-file .env.prod ps
 ```
 
-### 查看服务日志
+### View Service Logs
 ```bash
-# 查看所有服务日志
-docker-compose -f docker-compose.prod.yml --env-file .env.prod logs -f
+# View all service logs
+docker compose -f docker-compose.prod.yml --env-file .env.prod logs -f
 
-# 查看特定服务日志
-docker-compose -f docker-compose.prod.yml --env-file .env.prod logs -f backend
-docker-compose -f docker-compose.prod.yml --env-file .env.prod logs -f frontend
-docker-compose -f docker-compose.prod.yml --env-file .env.prod logs -f mysql
-docker-compose -f docker-compose.prod.yml --env-file .env.prod logs -f redis
+# View specific service logs
+docker compose -f docker-compose.prod.yml --env-file .env.prod logs -f backend
+docker compose -f docker-compose.prod.yml --env-file .env.prod logs -f frontend
+docker compose -f docker-compose.prod.yml --env-file .env.prod logs -f mysql
+docker compose -f docker-compose.prod.yml --env-file .env.prod logs -f redis
 ```
 
-### 重启服务
+### Restart Services
 ```bash
-# 重启所有服务
-docker-compose -f docker-compose.prod.yml --env-file .env.prod restart
+# Restart all services
+docker compose -f docker-compose.prod.yml --env-file .env.prod restart
 
-# 重启特定服务
-docker-compose -f docker-compose.prod.yml --env-file .env.prod restart backend
-docker-compose -f docker-compose.prod.yml --env-file .env.prod restart frontend
+# Restart specific service
+docker compose -f docker-compose.prod.yml --env-file .env.prod restart backend
+docker compose -f docker-compose.prod.yml --env-file .env.prod restart frontend
 ```
 
-### 停止服务
+### Stop Services
 ```bash
-docker-compose -f docker-compose.prod.yml --env-file .env.prod down
+docker compose -f docker-compose.prod.yml --env-file .env.prod down
 ```
 
-### 停止并删除数据卷（谨慎使用）
+### Stop and Remove Volumes (Use with Caution)
 ```bash
-docker-compose -f docker-compose.prod.yml --env-file .env.prod down -v
+docker compose -f docker-compose.prod.yml --env-file .env.prod down -v
 ```
 
-### 重新构建并启动
+### Rebuild and Start
 ```bash
-# 停止服务
-docker-compose -f docker-compose.prod.yml --env-file .env.prod down
+# Stop services
+docker compose -f docker-compose.prod.yml --env-file .env.prod down
 
-# 重新构建镜像
-docker-compose -f docker-compose.prod.yml --env-file .env.prod build --no-cache
+# Rebuild images
+docker compose -f docker-compose.prod.yml --env-file .env.prod build --no-cache
 
-# 启动服务
-docker-compose -f docker-compose.prod.yml --env-file .env.prod up -d
+# Start services
+docker compose -f docker-compose.prod.yml --env-file .env.prod up -d
 ```
 
-## 故障排查
+## Troubleshooting
 
-### 1. 端口被占用
+### 1. Port Already in Use
 ```bash
-# 检查端口占用
+# Check port usage
 netstat -tulpn | grep :80
 netstat -tulpn | grep :8080
 
-# 如果端口被占用，可以修改 docker-compose.prod.yml 中的端口映射
+# If port is occupied, modify port mapping in docker-compose.prod.yml
 ```
 
-### 2. 容器无法启动
+### 2. Container Won't Start
 ```bash
-# 查看容器日志
-docker-compose -f docker-compose.prod.yml --env-file .env.prod logs [服务名]
+# View container logs
+docker compose -f docker-compose.prod.yml --env-file .env.prod logs [service-name]
 
-# 检查容器状态
+# Check container status
 docker ps -a
 ```
 
-### 3. 数据库连接失败
+### 3. Database Connection Failed
 ```bash
-# 检查 MySQL 容器是否正常运行
-docker-compose -f docker-compose.prod.yml --env-file .env.prod logs mysql
+# Check if MySQL container is running normally
+docker compose -f docker-compose.prod.yml --env-file .env.prod logs mysql
 
-# 检查后端服务日志
-docker-compose -f docker-compose.prod.yml --env-file .env.prod logs backend
+# Check backend service logs
+docker compose -f docker-compose.prod.yml --env-file .env.prod logs backend
 ```
 
-### 4. 前端无法访问后端API
+### 4. Frontend Cannot Access Backend API
 ```bash
-# 检查 Nginx 配置
+# Check Nginx configuration
 docker exec -it sky-frontend cat /etc/nginx/conf.d/default.conf
 
-# 检查后端服务是否正常运行
+# Check if backend service is running normally
 curl http://localhost:8080/admin/employee/login
 ```
 
-### 5. 微信支付证书问题
+### 5. WeChat Pay Certificate Issues
 ```bash
-# 检查证书文件是否存在
+# Check if certificate files exist
 ls -la certs/
 
-# 检查证书文件权限
+# Check certificate file permissions
 chmod 644 certs/*.pem
 ```
 
-## 更新部署
+## Update Deployment
 
-### 方式一：使用 Git 拉取更新（推荐）
+### Method 1: Pull Updates via Git (Recommended)
 
-如果服务器上的项目已经是 Git 仓库：
+If the project on server is already a Git repository:
 
-1. **SSH 连接到服务器**
+1. **SSH to Server**
    ```bash
    ssh root@167.179.78.66
    ```
 
-2. **进入项目目录并拉取最新代码**
+2. **Navigate to Project Directory and Pull Latest Code**
    ```bash
    cd /root/takeout-mall
    git pull origin main
-   # 或者
+   # or
    git pull origin master
    ```
 
-3. **更新后端服务**
+3. **Update Backend Service**
    ```bash
-   # 使用更新脚本（推荐）
+   # Using update script (recommended)
    chmod +x update-backend.sh
    ./update-backend.sh
    
-   # 或者手动执行
+   # Or manually execute
    docker compose -f docker-compose.prod.yml --env-file .env.prod stop backend
    docker compose -f docker-compose.prod.yml --env-file .env.prod build --no-cache backend
    docker compose -f docker-compose.prod.yml --env-file .env.prod up -d backend
    ```
 
-### 方式二：使用 rsync 上传更新
+### Method 2: Upload Updates via rsync
 
-如果服务器上的项目不是 Git 仓库：
+If the project on server is not a Git repository:
 
-1. **在本地更新代码并推送到 Git**
+1. **Update Code Locally and Push to Git**
    ```bash
    git add .
-   git commit -m "更新代码"
+   git commit -m "Update code"
    git push
    ```
 
-2. **重新上传到服务器**
+2. **Re-upload to Server**
    ```bash
    rsync -avz --exclude 'node_modules' --exclude 'target' --exclude '.git' \
      /Users/weishu/Desktop/takeout\ mall/ root@167.179.78.66:/root/takeout-mall/
    ```
 
-3. **在服务器上更新后端服务**
+3. **Update Backend Service on Server**
    ```bash
    ssh root@167.179.78.66
    cd /root/takeout-mall
@@ -266,9 +266,9 @@ chmod 644 certs/*.pem
    ./update-backend.sh
    ```
 
-### 方式三：完整重新部署
+### Method 3: Full Redeployment
 
-如果需要重新部署所有服务（包括前端、MySQL、Redis）：
+If you need to redeploy all services (including frontend, MySQL, Redis):
 
 ```bash
 ssh root@167.179.78.66
@@ -276,58 +276,57 @@ cd /root/takeout-mall
 ./deploy.sh
 ```
 
-## 安全建议
+## Security Recommendations
 
-1. **修改默认密码**: 部署后立即修改服务器 root 密码
-2. **配置 SSH 密钥**: 使用 SSH 密钥登录，禁用密码登录
-3. **配置防火墙**: 只开放必要端口（22, 80, 8080）
-4. **定期备份**: 定期备份数据库和重要文件
-5. **更新系统**: 定期更新系统和 Docker 镜像
-6. **监控日志**: 定期查看服务日志，及时发现问题和异常
+1. **Change Default Password**: Change server root password immediately after deployment
+2. **Configure SSH Keys**: Use SSH key authentication, disable password login
+3. **Configure Firewall**: Only open necessary ports (22, 80, 8080)
+4. **Regular Backups**: Regularly backup database and important files
+5. **Update System**: Regularly update system and Docker images
+6. **Monitor Logs**: Regularly check service logs to detect issues and anomalies
 
-## 备份和恢复
+## Backup and Restore
 
-### 备份数据库
+### Backup Database
 ```bash
-# 备份 MySQL 数据（请替换 your_mysql_password 为实际的 MySQL 密码）
+# Backup MySQL data (replace your_mysql_password with actual MySQL password)
 docker exec sky-mysql mysqldump -u root -pyour_mysql_password sky_take_out > backup_$(date +%Y%m%d).sql
 
-# 备份 Redis 数据（请替换 your_redis_password 为实际的 Redis 密码）
+# Backup Redis data (replace your_redis_password with actual Redis password)
 docker exec sky-redis redis-cli --pass your_redis_password SAVE
 docker cp sky-redis:/data/dump.rdb ./redis_backup_$(date +%Y%m%d).rdb
 ```
 
-### 恢复数据库
+### Restore Database
 ```bash
-# 恢复 MySQL 数据（请替换 your_mysql_password 为实际的 MySQL 密码）
+# Restore MySQL data (replace your_mysql_password with actual MySQL password)
 docker exec -i sky-mysql mysql -u root -pyour_mysql_password sky_take_out < backup_20231110.sql
 
-# 恢复 Redis 数据
+# Restore Redis data
 docker cp redis_backup_20231110.rdb sky-redis:/data/dump.rdb
 docker restart sky-redis
 ```
 
-## 注意事项
+## Important Notes
 
-1. **证书文件**: 确保微信支付证书文件已正确上传到 `certs/` 目录
-2. **环境变量**: 生产环境的 `.env.prod` 文件包含敏感信息，不要提交到 Git
-3. **端口配置**: 生产环境使用标准端口（80, 8080），本地开发使用非标准端口（8081, 3307, 6380）
-4. **数据库初始化**: 首次部署会自动执行 `docs/sql/` 目录下的 SQL 脚本初始化数据库
-5. **日志管理**: 生产环境建议配置日志轮转，避免日志文件过大
+1. **Certificate Files**: Ensure WeChat Pay certificate files are correctly uploaded to `certs/` directory
+2. **Environment Variables**: Production `.env.prod` file contains sensitive information, do not commit to Git
+3. **Port Configuration**: Production uses standard ports (80, 8080), local development uses non-standard ports (8081, 3307, 6380)
+4. **Database Initialization**: First deployment will automatically execute SQL scripts in `docs/sql/` directory to initialize database
+5. **Log Management**: Production environment should configure log rotation to prevent log files from becoming too large
 
-## 联系支持
+## Support
 
-如果遇到问题，请检查：
-1. 服务日志
-2. 容器状态
-3. 网络连接
-4. 防火墙配置
-5. 证书文件
+If you encounter issues, please check:
+1. Service logs
+2. Container status
+3. Network connection
+4. Firewall configuration
+5. Certificate files
 
 ---
 
-**部署完成后，访问地址：**
-- 前端: http://167.179.78.66
-- 后端API: http://167.179.78.66:8080
-- API文档: http://167.179.78.66:8080/doc.html
-
+**After deployment, access addresses:**
+- Frontend: http://167.179.78.66
+- Backend API: http://167.179.78.66:8080
+- API Documentation: http://167.179.78.66:8080/doc.html
